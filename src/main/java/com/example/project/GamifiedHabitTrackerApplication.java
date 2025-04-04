@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BtbGroup02SpringMiniProjectApplication {
+public class GamifiedHabitTrackerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BtbGroup02SpringMiniProjectApplication.class, args);
+		SpringApplication.run(GamifiedHabitTrackerApplication.class, args);
 	}
 
 }
