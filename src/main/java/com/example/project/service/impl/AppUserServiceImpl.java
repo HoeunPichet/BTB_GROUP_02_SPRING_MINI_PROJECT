@@ -1,5 +1,6 @@
 package com.example.project.service.impl;
 
+import com.example.project.exception.AppBadRequestException;
 import com.example.project.exception.ThrowFieldException;
 import com.example.project.model.dto.request.RegisterRequest;
 import com.example.project.model.entity.AppUser;
@@ -23,28 +24,34 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepository.getUserByEmail(identifier);
-
-        if (appUser == null) {
-            throw new ThrowFieldException("identifier", "Identifier is not existing");
-        }
-
-        if (!appUser.getIsVerified()) {
-            throw new ThrowFieldException("user", "User has not verified yet");
-        }
-
-        return appUser;
+        return appUserRepository.getUserByEmail(identifier);
     }
 
     @Override
     public AppUserRegister registerUser(@Valid RegisterRequest registerRequest) {
+        AppUser findUser = appUserRepository.getUserByEmail(registerRequest.getEmail());
+
+        if (findUser != null) {
+            throw new ThrowFieldException("email", "Email has already taken");
+        }
+
         String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
         registerRequest.setPassword(encodedPass);
         AppUser appUser = appUserRepository.registerUser(registerRequest);
-        System.out.println("Hello"+ appUser);
-//        appUser.setEmail(appUser.getUsername());
-//        appUser.setUsername(appUser.getName());
 
         return mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
+    }
+
+    @Override
+    public AppUserRegister findUserByIdentifier(String email, String password) {
+        AppUser appUser = appUserRepository.getUserByEmail(email);
+        if (appUser == null) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
+
+        boolean isCorrect = passwordEncoder.matches(password, appUser.getPassword());
+        if (!isCorrect) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
+
+        if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet");
+
+        return mapper.map(appUser, AppUserRegister.class);
     }
 }

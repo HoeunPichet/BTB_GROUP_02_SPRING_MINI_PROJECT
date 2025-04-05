@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -16,9 +17,10 @@ public class JwtUtils {
     private final long expiration = TimeUnit.MINUTES.toMillis(120);
 
     // generate token for user
-    public String generateToken(String email) {
+    public String generateToken(String email, UUID userId) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId) // Add user ID here
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(generateSignKey(), SignatureAlgorithm.HS256)
@@ -51,6 +53,10 @@ public class JwtUtils {
     // retrieve email from jwt token
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
     // retrieve expiration date from jwt token

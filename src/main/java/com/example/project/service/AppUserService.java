@@ -1,7 +1,6 @@
 package com.example.project.service;
 
 import com.example.project.model.dto.request.RegisterRequest;
-import com.example.project.model.entity.AppUser;
 import com.example.project.model.entity.AppUserRegister;
 import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,4 +13,5 @@ public interface AppUserService extends UserDetailsService {
 
     AppUserRegister registerUser(@Valid RegisterRequest appUserRequest);
 
+    AppUserRegister findUserByIdentifier (String email, String password);
 }
