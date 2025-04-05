@@ -36,10 +36,10 @@ public class AuthController {
         String identifier = loginRequest.getIdentifier();
         String password = loginRequest.getPassword();
 
-        appUserService.findUserByIdentifier(identifier, password);
+        AppUserRegister appUserRegister = appUserService.findUserByIdentifier(identifier, password);
 
         Authentication auth = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(identifier, password)
+            new UsernamePasswordAuthenticationToken(appUserRegister.getEmail(), password)
         );
 
         if (!auth.isAuthenticated()) {
@@ -49,7 +49,7 @@ public class AuthController {
                 .success(true)
                 .message("Logged in successfully")
                 .status(HttpStatus.OK)
-                .payload(new LoginToken(jwtUtils.generateToken(identifier)))
+                .payload(new LoginToken(jwtUtils.generateToken(identifier, appUserRegister.getAppUserId())))
                 .build();
 
         return ResponseEntity.ok(response);
