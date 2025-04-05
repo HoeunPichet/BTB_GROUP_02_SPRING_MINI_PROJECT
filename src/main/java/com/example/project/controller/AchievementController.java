@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.model.dto.response.ApiResponse;
 import com.example.project.model.entity.Achievement;
+import com.example.project.model.entity.AppUser;
 import com.example.project.service.AchievementService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Min;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -26,6 +28,18 @@ public class AchievementController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements(@RequestParam(defaultValue = "1") @Min(value = 1, message = "must be greater than 0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         List<Achievement> achievements = achievementService.getAllAchievement(page, size);
+        ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
+                .success(true)
+                .message("Achievements retrieved successfully!")
+                .payload(achievements)
+                .status(HttpStatus.OK)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/app-users")
+    public ResponseEntity<ApiResponse<List<Achievement>>> getAchievementByAppUser(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        List<Achievement> achievements = achievementService.getAchievementByAppUser(page, size);
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .message("Achievements retrieved successfully!")

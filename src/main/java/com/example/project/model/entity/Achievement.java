@@ -4,10 +4,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Builder
 @Data
 public class Achievement {
-    private Integer achievementId;
+    private UUID achievementId;
     private String title;
     private String description;
     private String badge;
