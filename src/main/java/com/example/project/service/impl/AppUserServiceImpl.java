@@ -41,7 +41,6 @@ public class AppUserServiceImpl implements AppUserService {
         String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
         registerRequest.setPassword(encodedPass);
         AppUser appUser = appUserRepository.registerUser(registerRequest);
-        System.out.println("Hello"+ appUser);
 //        appUser.setEmail(appUser.getUsername());
 //        appUser.setUsername(appUser.getName());
 
