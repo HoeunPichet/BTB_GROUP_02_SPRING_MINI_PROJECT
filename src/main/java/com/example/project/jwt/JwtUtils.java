@@ -13,23 +13,22 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
-    private final String SECRET = "aGVsbG9ldmVyeW9uZXRoaXNpc215c2VjcmV0";
-    private final long EXPIRATION = TimeUnit.MINUTES.toMillis(120);
-
+    private final long expiration = TimeUnit.MINUTES.toMillis(120);
 
     // generate token for user
-    public String generateToken(String identifier) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(identifier)
+                .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(generateSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // generate secret key for signing token
     private SecretKey generateSignKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(SECRET);
+        String secret = "aWxvdmV5b3VpaGF0ZXlvdXRoaXNpc215c2VjcmV0ZmluZG15aWZ5b3VjYW5paG9wZXlvdWRvaXRiZXR0ZXI=";
+        byte[] keyBytes = Base64.getDecoder().decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

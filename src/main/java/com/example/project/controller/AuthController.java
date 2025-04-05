@@ -3,8 +3,11 @@ package com.example.project.controller;
 import com.example.project.exception.AppNotFoundException;
 import com.example.project.jwt.JwtUtils;
 import com.example.project.model.dto.request.LoginRequest;
+import com.example.project.model.dto.request.RegisterRequest;
 import com.example.project.model.dto.response.ApiResponse;
+import com.example.project.model.entity.AppUserRegister;
 import com.example.project.model.entity.LoginToken;
+import com.example.project.service.impl.AppUserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auths")
 public class AuthController {
-
+    private final AppUserServiceImpl appUserService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
@@ -45,5 +48,18 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<AppUserRegister>> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+        AppUserRegister appUser = appUserService.registerUser(registerRequest);
+        ApiResponse<AppUserRegister> response = ApiResponse.<AppUserRegister>builder()
+                .success(true)
+                .message("Registered successfully")
+                .status(HttpStatus.CREATED)
+                .payload(appUser)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

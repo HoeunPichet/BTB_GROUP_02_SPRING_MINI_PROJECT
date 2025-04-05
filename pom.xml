@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BTB_GROUP_02_SPRING_MINI_PROJECT</name>
+	<name>GamifiedHabitTracker</name>
 	<description>Mini project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -66,6 +66,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
