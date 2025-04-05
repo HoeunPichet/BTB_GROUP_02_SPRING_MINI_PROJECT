@@ -1,5 +1,6 @@
 package com.example.project.service.impl;
 
+import com.example.project.exception.AppBadRequestException;
 import com.example.project.exception.ThrowFieldException;
 import com.example.project.model.dto.request.RegisterRequest;
 import com.example.project.model.entity.AppUser;
@@ -42,16 +43,13 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser findUserByIdentifier(String email) {
+    public void findUserByIdentifier(String email, String password) {
         AppUser appUser = appUserRepository.getUserByEmail(email);
-        if (appUser == null) {
-            throw new ThrowFieldException("identifier", "Identifier is not existing");
-        }
+        if (appUser == null) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
-        if (!appUser.getIsVerified()) {
-            throw new ThrowFieldException("user", "User has not verified yet");
-        }
+        boolean isCorrect = passwordEncoder.matches(password, appUser.getPassword());
+        if (!isCorrect) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
-        return appUser;
+        if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet");
     }
 }

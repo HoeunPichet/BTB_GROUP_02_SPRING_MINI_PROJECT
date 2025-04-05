@@ -30,20 +30,13 @@ public class AuthController {
     private final AppUserService appUserService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final PasswordEncoder passwordEncoder;
-
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginToken>> login(@Valid @RequestBody LoginRequest loginRequest) {
         String identifier = loginRequest.getIdentifier();
         String password = loginRequest.getPassword();
 
-        AppUser appUser = appUserService.findUserByIdentifier(identifier);
-        boolean isCorrect = passwordEncoder.matches(password, appUser.getPassword());
-
-        if (!isCorrect) {
-            throw new ThrowFieldException("password", "Password is incorrect");
-        }
+        appUserService.findUserByIdentifier(identifier, password);
 
         Authentication auth = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(identifier, password)

@@ -26,6 +26,15 @@ public class GlobalExceptionHandler {
         return detail;
     }
 
+    @ExceptionHandler(AppBadRequestException.class)
+    public ProblemDetail handleBadRequestException(AppBadRequestException e) {
+        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        detail.setDetail(e.getMessage());
+        detail.setProperty("timestamp", LocalDateTime.now());
+
+        return detail;
+    }
+
     @ExceptionHandler(ThrowFieldException.class)
     public ProblemDetail handleThrowFieldException(ThrowFieldException e) {
         Map<String, String> errors = new HashMap<>();
