@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 
 @RestController
@@ -36,8 +38,11 @@ public class FileController {
     }
 
     @GetMapping("/preview-file/{file-name}")
-    public ResponseEntity<?> getFileByFileName(@PathVariable("file-name") String fileName) {
-        return null;
+    public ResponseEntity<?> getFileByFileName(@PathVariable("file-name") String fileName) throws IOException {
+        InputStream inputStream = fileService.getFileByFileName(fileName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(inputStream.readAllBytes());
     }
 
 }

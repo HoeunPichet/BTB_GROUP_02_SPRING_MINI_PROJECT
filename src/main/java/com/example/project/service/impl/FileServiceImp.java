@@ -3,10 +3,7 @@ package com.example.project.service.impl;
 import com.example.project.exception.AppNotFoundException;
 import com.example.project.model.entity.FileMetadata;
 import com.example.project.service.FileService;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 @Service
@@ -64,5 +62,16 @@ public class FileServiceImp implements FileService {
                 .fileType(file.getContentType())
                 .fileSize(file.getSize())
                 .build();
+    }
+
+    @SneakyThrows
+    @Override
+    public InputStream getFileByFileName(String filename) {
+        return minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(filename)
+                        .build()
+        );
     }
 }
