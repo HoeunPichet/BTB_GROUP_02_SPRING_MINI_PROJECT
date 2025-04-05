@@ -35,16 +35,12 @@ public class AppUser implements UserDetails {
         return authorityList;
     }
 
-    public String getName() {
-        return this.username;
-    }
-
-    public void setName(String username) {
-        this.username = username;
-    }
-
     public String getUsername() {
         return this.email;
+    }
+
+    public String getEmail() {
+        return this.username;
     }
 
     @Override
