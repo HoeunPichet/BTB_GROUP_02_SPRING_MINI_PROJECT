@@ -43,7 +43,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void findUserByIdentifier(String email, String password) {
+    public AppUserRegister findUserByIdentifier(String email, String password) {
         AppUser appUser = appUserRepository.getUserByEmail(email);
         if (appUser == null) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
@@ -51,5 +51,7 @@ public class AppUserServiceImpl implements AppUserService {
         if (!isCorrect) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
         if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet");
+
+        return mapper.map(appUser, AppUserRegister.class);
     }
 }
