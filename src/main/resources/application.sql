@@ -13,7 +13,7 @@ CREATE TABLE app_users (
     username VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    level INT DEFAULT 1,
+    level INT DEFAULT 0,
     xp INT DEFAULT 0,
     profile_image VARCHAR(255),
     is_verified BOOLEAN DEFAULT FALSE,
