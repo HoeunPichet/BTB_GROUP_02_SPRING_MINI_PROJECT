@@ -14,4 +14,5 @@ public interface AppUserService extends UserDetailsService {
 
     AppUserRegister registerUser(@Valid RegisterRequest appUserRequest);
 
+    AppUser findUserByIdentifier (String email);
 }

@@ -23,8 +23,27 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepository.getUserByEmail(identifier);
+        return appUserRepository.getUserByEmail(identifier);
+    }
 
+    @Override
+    public AppUserRegister registerUser(@Valid RegisterRequest registerRequest) {
+        AppUser findUser = appUserRepository.getUserByEmail(registerRequest.getEmail());
+
+        if (findUser != null) {
+            throw new ThrowFieldException("email", "Email has already taken");
+        }
+
+        String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
+        registerRequest.setPassword(encodedPass);
+        AppUser appUser = appUserRepository.registerUser(registerRequest);
+
+        return mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
+    }
+
+    @Override
+    public AppUser findUserByIdentifier(String email) {
+        AppUser appUser = appUserRepository.getUserByEmail(email);
         if (appUser == null) {
             throw new ThrowFieldException("identifier", "Identifier is not existing");
         }
@@ -34,16 +53,5 @@ public class AppUserServiceImpl implements AppUserService {
         }
 
         return appUser;
-    }
-
-    @Override
-    public AppUserRegister registerUser(@Valid RegisterRequest registerRequest) {
-        String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
-        registerRequest.setPassword(encodedPass);
-        AppUser appUser = appUserRepository.registerUser(registerRequest);
-//        appUser.setEmail(appUser.getUsername());
-//        appUser.setUsername(appUser.getName());
-
-        return mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
     }
 }
