@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface AchievementService {
     List<Achievement> getAllAchievement(Integer page, Integer size);
+
+    List<Achievement> getAchievementByAppUser(Integer page, Integer size);
+
+    Long getUserIdByEmail(String username);
 }

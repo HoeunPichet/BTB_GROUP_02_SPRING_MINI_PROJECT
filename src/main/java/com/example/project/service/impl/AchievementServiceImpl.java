@@ -17,4 +17,14 @@ public class AchievementServiceImpl implements AchievementService {
     public List<Achievement> getAllAchievement(Integer page, Integer size) {
         return achievementRepository.findAllAchievement(page, size);
     }
+
+    @Override
+    public List<Achievement> getAchievementByAppUser(Integer page, Integer size) {
+        return List.of();
+    }
+
+    @Override
+    public Long getUserIdByEmail(String username) {
+        return 0L;
+    }
 }
