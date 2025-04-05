@@ -23,7 +23,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepository.getUserByIdentifier(identifier);
+        AppUser appUser = appUserRepository.getUserByEmail(identifier);
 
         if (appUser == null) {
             throw new ThrowFieldException("identifier", "Identifier is not existing");
@@ -41,8 +41,9 @@ public class AppUserServiceImpl implements AppUserService {
         String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
         registerRequest.setPassword(encodedPass);
         AppUser appUser = appUserRepository.registerUser(registerRequest);
-        appUser.setEmail(appUser.getUsername());
-        appUser.setUsername(appUser.getName());
+        System.out.println("Hello"+ appUser);
+//        appUser.setEmail(appUser.getUsername());
+//        appUser.setUsername(appUser.getName());
 
         return mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
     }

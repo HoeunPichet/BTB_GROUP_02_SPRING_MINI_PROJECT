@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppUser implements UserDetails {
-    private Integer appUserId;
+    private UUID appUserId;
     private String username;
     private String email;
     private String password;
