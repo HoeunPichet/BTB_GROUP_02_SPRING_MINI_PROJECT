@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,4 +25,10 @@ public interface AchievementRepository {
         select * from achievements offset (#{page}-1)* #{size} limit #{size};
     """)
     List<Achievement> findAllAchievement(Integer page, Integer size);
+
+    @RequestMapping("achievementMapper")
+    @Select("""
+        SELECT * FROM achievements a INNER JOIN app_user_achievements uc ON a.achievement_id = uc.achievement_id WHERE uc.app_user_id = CAST(#{userId} AS uuid) LIMIT #{size} OFFSET (#{page} - 1) * #{size}
+    """)
+    List<Achievement> findAchievementByAppUser(UUID userId, Integer page, Integer size);
 }
