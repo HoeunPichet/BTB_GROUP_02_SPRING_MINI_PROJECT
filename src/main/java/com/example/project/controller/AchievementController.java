@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +31,6 @@ public class AchievementController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements(@RequestParam(defaultValue = "1") @Min(value = 1, message = "must be greater than 0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         List<Achievement> achievements = achievementService.getAllAchievement(page, size);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = (String) auth.getCredentials();
-
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .message("Achievements retrieved successfully!")
@@ -44,7 +42,10 @@ public class AchievementController {
 
     @GetMapping("/app-users")
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievementByAppUser(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-        List<Achievement> achievements = achievementService.getAchievementByAppUser(page, size);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = UUID.fromString((String) auth.getCredentials());
+        System.out.println("userId: " + userId);
+        List<Achievement> achievements = achievementService.getAchievementByAppUser(userId, page, size);
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .message("Achievements retrieved successfully!")
