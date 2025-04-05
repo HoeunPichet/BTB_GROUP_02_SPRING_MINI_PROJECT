@@ -38,8 +38,10 @@ public class AppUserServiceImpl implements AppUserService {
         String encodedPass = passwordEncoder.encode(registerRequest.getPassword());
         registerRequest.setPassword(encodedPass);
         AppUser appUser = appUserRepository.registerUser(registerRequest);
+        AppUserRegister appUserResponse = mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
+        appUserResponse.setUsername(appUser.getName());
 
-        return mapper.map(appUserRepository.getUserById(appUser.getAppUserId()), AppUserRegister.class);
+        return appUserResponse;
     }
 
     @Override
@@ -52,6 +54,9 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet");
 
-        return mapper.map(appUser, AppUserRegister.class);
+        AppUserRegister appUserResponse = mapper.map(appUser, AppUserRegister.class);
+        appUserResponse.setUsername(appUser.getName());
+
+        return appUserResponse;
     }
 }

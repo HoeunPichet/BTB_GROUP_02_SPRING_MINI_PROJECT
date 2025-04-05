@@ -49,7 +49,7 @@ public class AuthController {
                 .success(true)
                 .message("Logged in successfully")
                 .status(HttpStatus.OK)
-                .payload(new LoginToken(jwtUtils.generateToken(identifier, appUserRegister.getAppUserId())))
+                .payload(new LoginToken(jwtUtils.generateToken(appUserRegister.getEmail(), appUserRegister.getAppUserId())))
                 .build();
 
         return ResponseEntity.ok(response);
