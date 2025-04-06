@@ -15,5 +15,5 @@ public class HabitLog {
     private String logDate;
     private HabitStatus status;
     private Integer xpEarned;
-    private UUID habitId;
+    private Habit habit;
 }
