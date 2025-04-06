@@ -14,6 +14,7 @@ public interface AppUserRepository {
     @Select("""
             SELECT * from app_users
             WHERE email = #{identifier} OR username = #{identifier}
+            LIMIT 1
             """)
     @Results(id = "userMapper", value = {
             @Result(property = "appUserId", column = "app_user_id", javaType = UUID.class, jdbcType = JdbcType.VARCHAR),
