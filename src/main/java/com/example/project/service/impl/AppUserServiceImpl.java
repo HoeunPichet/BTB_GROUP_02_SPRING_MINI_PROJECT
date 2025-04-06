@@ -24,12 +24,12 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        return appUserRepository.getUserByEmail(identifier);
+        return appUserRepository.getUserByIdentifier(identifier);
     }
 
     @Override
     public AppUserRegister registerUser(@Valid RegisterRequest registerRequest) {
-        AppUser findUser = appUserRepository.getUserByEmail(registerRequest.getEmail());
+        AppUser findUser = appUserRepository.getUserByIdentifier(registerRequest.getEmail());
 
         if (findUser != null) {
             throw new ThrowFieldException("email", "Email has already taken");
@@ -46,17 +46,35 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUserRegister findUserByIdentifier(String email, String password) {
-        AppUser appUser = appUserRepository.getUserByEmail(email);
+        AppUser appUser = appUserRepository.getUserByIdentifier(email);
         if (appUser == null) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
         boolean isCorrect = passwordEncoder.matches(password, appUser.getPassword());
         if (!isCorrect) throw new AppBadRequestException("Invalid username, email, or password. Please check your credentials and try again.");
 
-        if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet");
+        if (!appUser.getIsVerified()) throw new AppBadRequestException("User has not verified yet.");
 
         AppUserRegister appUserResponse = mapper.map(appUser, AppUserRegister.class);
         appUserResponse.setUsername(appUser.getName());
 
         return appUserResponse;
     }
+
+    @Override
+    public void checkEmailBeforeOpt(String email) {
+        AppUser appUser = appUserRepository.getUserByEmail(email);
+        if (appUser == null) {
+            throw new AppBadRequestException("Your email has not registered yet.");
+        }
+
+        if (appUser.getIsVerified()) {
+            throw new AppBadRequestException("Your email has already verified.");
+        }
+    }
+
+    @Override
+    public void verifyEmailWithOpt(String email) {
+        appUserRepository.verifyEmailWithOpt(email);
+    }
+
 }
