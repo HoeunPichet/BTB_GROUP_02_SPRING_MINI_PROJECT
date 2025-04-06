@@ -32,7 +32,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         Content content = new Content("text/html", loadTemplate(otp));
         Mail mail = new Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid(sendGridApiKey);
+        SendGrid sg = new SendGrid("SG."+sendGridApiKey);
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
