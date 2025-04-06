@@ -2,6 +2,7 @@ package com.example.project.repository;
 
 import com.example.project.model.dto.request.RegisterRequest;
 import com.example.project.model.entity.AppUser;
+import com.example.project.model.entity.AppUserRegister;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
@@ -20,8 +21,14 @@ public interface AppUserRepository {
             @Result(property = "isVerified", column = "is_verified"),
             @Result(property = "createdAt", column = "created_at")
     })
-    AppUser getUserByEmail(String identifier);
+    AppUser getUserByIdentifier(String identifier);
 
+    @Select("""
+            SELECT * from app_users
+            WHERE email = #{email}
+            """)
+    @ResultMap("userMapper")
+    AppUser getUserByEmail(String email);
 
     @Select("""
             SELECT * from app_users
@@ -38,4 +45,11 @@ public interface AppUserRepository {
             """)
     @ResultMap("userMapper")
     AppUser registerUser(@Param("user") RegisterRequest registerRequest);
+
+    @Update("""
+            UPDATE app_users
+            SET is_verified = true
+            WHERE email = #{email}
+            """)
+    void verifyEmailWithOpt(String email);
 }

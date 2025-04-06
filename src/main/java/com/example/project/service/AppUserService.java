@@ -14,4 +14,8 @@ public interface AppUserService extends UserDetailsService {
     AppUserRegister registerUser(@Valid RegisterRequest appUserRequest);
 
     AppUserRegister findUserByIdentifier (String email, String password);
+
+    void checkEmailBeforeOpt(String email);
+
+    void verifyEmailWithOpt(String email);
 }
