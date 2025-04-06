@@ -67,11 +67,16 @@ public class FileServiceImp implements FileService {
     @SneakyThrows
     @Override
     public InputStream getFileByFileName(String filename) {
-        return minioClient.getObject(
-                GetObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(filename)
-                        .build()
-        );
+
+        try{
+            return minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(filename)
+                            .build()
+            );
+        }catch (Exception e){
+            throw new AppNotFoundException("File image does not exist.");
+        }
     }
 }

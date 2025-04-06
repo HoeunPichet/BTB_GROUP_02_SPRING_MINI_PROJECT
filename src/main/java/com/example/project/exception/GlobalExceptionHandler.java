@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -57,7 +54,6 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-
         detail.setDetail("BAD REQUEST");
         detail.setProperty("errors", errors);
 
@@ -70,12 +66,20 @@ public class GlobalExceptionHandler {
         for (MessageSourceResolvable pathError : e.getAllErrors()) {
             errors.add(pathError.getDefaultMessage());
         }
-
         ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         detail.setDetail("BAD REQUEST");
         detail.setProperty("timestamp", LocalDateTime.now());
         detail.setProperty("errors", errors);
 
+        return detail;
+    }
+    @ExceptionHandler(HandleEnumHabitFrequencyException.class)
+    public ProblemDetail handleInvalidEnumValue(HandleEnumHabitFrequencyException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("frequency", ex.getMessage());
+        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        detail.setProperty("timestamp", LocalDateTime.now());
+        detail.setProperty("errors", errors);
         return detail;
     }
 }

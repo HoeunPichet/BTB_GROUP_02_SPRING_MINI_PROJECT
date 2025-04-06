@@ -90,13 +90,13 @@ public class AuthController {
         ApiResponse<String> response = ApiResponse.<String>builder()
                 .success(true)
                 .message("Sent OTP successfully")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .build();
 
         otpCacheService.removeOtp(email);
         otpCacheService.storeOtp(email, otp);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/verify")
