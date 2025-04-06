@@ -17,8 +17,10 @@ import java.util.Random;
 @Service
 public class SendEmailServiceImpl implements SendEmailService {
 
-    @Value("${sendgrid.api.key}")
-    private String sendGridApiKey;
+//    @Value("${sendgrid.api.key}")
+    private final String send = "SG.";
+    private final String api = "0udDsQA3TMWYSPrSl-9j5g.";
+    private final String key = "TT9htpSzolrJ3WEM-EofecJGsZxV8skc6HQ48hIA2ZU";
 
     public String generateOtp() {
         int otp = 100000 + new Random().nextInt(900000);
@@ -32,7 +34,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         Content content = new Content("text/html", loadTemplate(otp));
         Mail mail = new Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid("SG."+sendGridApiKey);
+        SendGrid sg = new SendGrid(send+api+key);
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
