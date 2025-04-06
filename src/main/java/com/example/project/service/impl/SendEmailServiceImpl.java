@@ -17,7 +17,7 @@ import java.util.Random;
 @Service
 public class SendEmailServiceImpl implements SendEmailService {
 
-    @Value("${sendgrid.api.key}")
+    @Value("${sendemail.api.key}")
     private String sendGridApiKey;
 
     public String generateOtp() {
