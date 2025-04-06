@@ -22,10 +22,6 @@ public class HabitServiceImpl implements HabitService {
 
     @Override
     public List<Habit> getAllHabit(Integer page,Integer size,UUID userId) {
-        List<Habit> habits = habitRepository.getAllHabit(page,size,userId);
-        if(habits.isEmpty()){
-            throw new AppNotFoundException("Habit don't have any data yet !!");
-        }
         return habitRepository.getAllHabit(page,size,userId);
     }
 
