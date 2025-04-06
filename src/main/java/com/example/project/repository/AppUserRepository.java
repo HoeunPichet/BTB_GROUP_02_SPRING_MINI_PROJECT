@@ -53,4 +53,14 @@ public interface AppUserRepository {
             WHERE email = #{email}
             """)
     void verifyEmailWithOpt(String email);
+
+
+    @Select("""
+            UPDATE app_users
+            SET level = ((xp+10)/100),
+            xp = (xp+10)
+            WHERE app_user_id = #{appUserId}::UUID
+            RETURNING xp
+            """)
+    AppUser updateUserXpById(UUID appUserId);
 }

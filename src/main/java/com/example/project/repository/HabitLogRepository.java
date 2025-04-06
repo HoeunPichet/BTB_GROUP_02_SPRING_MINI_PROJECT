@@ -40,7 +40,7 @@ public interface HabitLogRepository {
                 WHEN #{habitLog.status} = 'COMPLETED' THEN 10
                 ELSE 0
             END
-        ),
+        )
         RETURNING *;
     """)
     @ResultMap("habitLogMapper")
