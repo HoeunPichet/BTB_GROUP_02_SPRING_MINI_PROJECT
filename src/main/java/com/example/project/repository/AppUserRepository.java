@@ -1,5 +1,6 @@
 package com.example.project.repository;
 
+import com.example.project.model.dto.request.ProfileRequest;
 import com.example.project.model.dto.request.RegisterRequest;
 import com.example.project.model.entity.AppUser;
 import com.example.project.model.entity.AppUserRegister;
@@ -53,4 +54,32 @@ public interface AppUserRepository {
             WHERE email = #{email}
             """)
     void verifyEmailWithOpt(String email);
+
+
+    @Select("""
+            UPDATE app_users
+            SET level = ((xp+10)/100),
+            xp = (xp+10)
+            WHERE app_user_id = #{appUserId}::UUID
+            RETURNING xp
+            """)
+    AppUser updateUserXpById(UUID appUserId);
+
+
+    @Select("""
+            UPDATE app_users
+            SET username = #{user.username},
+            profile_image = #{user.profileImageUrl}
+            WHERE app_user_id = #{appUserId}::UUID
+            RETURNING *
+            """)
+    @ResultMap("userMapper")
+    AppUser updateUserProfile(UUID appUserId, @Param("user") ProfileRequest profileRequest);
+
+
+    @Delete("""
+            DELETE FROM app_users
+            WHERE app_user_id = #{appUserId}::UUID
+            """)
+    void deleteUser(UUID appUserId);
 }

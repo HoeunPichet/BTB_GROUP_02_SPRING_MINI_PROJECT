@@ -1,10 +1,7 @@
 package com.example.project.repository;
 
 import com.example.project.model.entity.Achievement;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,4 +28,24 @@ public interface AchievementRepository {
         SELECT * FROM achievements a INNER JOIN app_user_achievements uc ON a.achievement_id = uc.achievement_id WHERE uc.app_user_id = CAST(#{userId} AS uuid) LIMIT #{size} OFFSET (#{page} - 1) * #{size}
     """)
     List<Achievement> findAchievementByAppUser(UUID userId, Integer page, Integer size);
+
+
+    @RequestMapping("achievementMapper")
+    @Select("""
+        select * from achievements where xp_required <= #{xp}
+    """)
+    List<Achievement> findAchievementxByXp(Integer xp);
+
+
+    @Delete("""
+        delete from app_user_achievements
+        where app_user_id = #{userId}::UUID
+    """)
+    void deleteUserAchievement(UUID userId);
+
+    @Insert("""
+        insert into app_user_achievements(app_user_id, achievement_id)
+        values(#{userId}::UUID, #{achievementId}::UUID)
+    """)
+    void addUserAchievement(UUID userId, UUID achievementId);
 }
